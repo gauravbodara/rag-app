@@ -15,5 +15,6 @@ export async function parseAndChunkPDF(buffer) {
   // Simple chunking: split every 1000 chars
   const chunks = text.match(/(.|\n){1,1000}/g) || [];
   const docs = chunks.map((chunk, i) => new Document({ pageContent: chunk, metadata: { chunk: i } }));
+  // console.log(docs, chunks);
   return { docs, chunks };
 } 

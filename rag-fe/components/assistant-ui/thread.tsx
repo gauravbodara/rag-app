@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { MarkdownText } from "./markdown-text";
 
 export const Thread = () => {
   const [input, setInput] = useState("");
@@ -52,7 +53,7 @@ export const Thread = () => {
         {answer && (
           <div className="bg-muted rounded p-4">
             <div className="font-semibold mb-2">Answer:</div>
-            <div>{answer}</div>
+            <MarkdownText content={answer} />
             {references && references.length > 0 && (
               <div className="mt-4">
                 <div className="font-semibold mb-1">References:</div>

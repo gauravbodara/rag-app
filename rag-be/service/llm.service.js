@@ -6,7 +6,7 @@ export async function callLLMWithContext(query, context, openAIApiKey) {
   const prompt = `Answer the question based on the context below.\n\nContext:\n${context}\n\nQuestion: ${query}`;
   // console.log("LLM Prompt:", prompt);
   const result = await llm.invoke(prompt);
-  console.log("LLM Result:", result);
+  // console.log("LLM Result:", result);
   return result;
 } 
 

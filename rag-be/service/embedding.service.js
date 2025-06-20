@@ -3,26 +3,29 @@ import { OllamaEmbeddings } from "@langchain/ollama";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { QdrantVectorStore } from "@langchain/qdrant";
 
-
+// Init embeddings
 const embeddings = new OllamaEmbeddings({
   model: "nomic-embed-text:v1.5", // Default value
   baseUrl: process.env.OLLAMA_URL, // Default value
 });
 
+// Init vector client
 const vectorClient = new QdrantClient({ url: process.env.QDRANT_URL });
-// Step 4: Create Qdrant vector store and add documents
 
-//Make this singleton 
+// Init vector store from existing collection if it exists
 let vectorStore = null;
-const collections = await vectorClient.getCollections();
-const exists = collections.collections.some(c => c.name === "langchain-js-demo");
-if (exists) {
-  vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
-    client: vectorClient,
-    collectionName: "langchain-js-demo",
-  });
-}
+(async () => {
+  const collections = await vectorClient.getCollections();
+  const exists = collections.collections.some(c => c.name === "langchain-js-demo");
+  if (exists) {
+    vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
+      client: vectorClient,
+      collectionName: "langchain-js-demo",
+    });
+  }
+})();
 
+// Create vector store from documents
 export async function createVectorStoreFromDocs(docs) {
   vectorStore = await QdrantVectorStore.fromDocuments(docs, embeddings, { 
     client: vectorClient,
@@ -30,7 +33,7 @@ export async function createVectorStoreFromDocs(docs) {
   });
 }
 
+// Search vector store
 export async function searchVectorStore(query) {
-  // console.log("Searching for:", query, "with embeddings:", embeddings, "in vector store:", vectorStore);
   return await vectorStore.similaritySearch(query, 4);
 }

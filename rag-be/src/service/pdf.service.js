@@ -1,6 +1,4 @@
-import { Document } from 'langchain/document';
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 
 export async function parseAndChunkPDF(buffer) {

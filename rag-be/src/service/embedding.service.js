@@ -2,7 +2,6 @@ import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import { QdrantVectorStore } from "@langchain/qdrant";
-
 // Init embeddings
 const embeddings = new OllamaEmbeddings({
   model: "nomic-embed-text:v1.5", // Default value

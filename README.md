@@ -1,4 +1,4 @@
-# rag-appAdd commentMore actions
+# rag-app
 
 ## Setup Instructions
 

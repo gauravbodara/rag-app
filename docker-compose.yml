@@ -6,7 +6,9 @@ services:
       - "6333:6333"
       - "6334:6334"
     volumes:
-      - qdrant_data:/qdrant/storage
+      - ./qdrant_storage:/qdrant/storage
+    networks:
+      - rag-net
 
   ollama:
     image: ollama/ollama
@@ -23,7 +25,41 @@ services:
         ollama pull nomic-embed-text:v1.5 &&
         wait
       "
+    networks:
+      - rag-net
+    
+  rag-be:
+    build:
+      context: ./rag-be
+      dockerfile: Dockerfile
+    container_name: rag-be
+    ports:
+      - "3001:3001"
+    networks:
+      - rag-net
+
+  
+  rag-fe:
+    build:
+      context: ./rag-fe
+      dockerfile: Dockerfile
+    container_name: rag-fe
+    environment:
+      - NEXT_PUBLIC_RAG_BE_URL=http://docker.host.internal:3001
+    ports:
+      - "3000:3000"
+    networks:
+      - rag-net
+    depends_on:
+      - rag-be
+      - qdrant
+      - ollama
+
 
 volumes:
   qdrant_data: 
   ollama_data:
+
+networks:
+  rag-net:
+    driver: bridge

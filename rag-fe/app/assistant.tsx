@@ -31,7 +31,7 @@ export const Assistant = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch("http://localhost:3001/upload", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_RAG_BE_URL}/upload`, {
         method: "POST",
         body: formData,
       });

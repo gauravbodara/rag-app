@@ -12,3 +12,11 @@ environment:
 ```
 
 Replace `your_openai_api_key_here` with your actual OpenAI API key.
+
+After setting the API key, start the application using the following command:
+
+```sh
+docker-compose up -d
+```
+
+This will start all services in detached mode.

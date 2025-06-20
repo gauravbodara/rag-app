@@ -6,10 +6,10 @@ import { QdrantVectorStore } from "@langchain/qdrant";
 
 const embeddings = new OllamaEmbeddings({
   model: "nomic-embed-text:v1.5", // Default value
-  baseUrl: "http://localhost:11434", // Default value
+  baseUrl: process.env.OLLAMA_URL, // Default value
 });
 
-const vectorClient = new QdrantClient({ url: "http://localhost:6333" });
+const vectorClient = new QdrantClient({ url: process.env.QDRANT_URL });
 // Step 4: Create Qdrant vector store and add documents
 
 //Make this singleton 

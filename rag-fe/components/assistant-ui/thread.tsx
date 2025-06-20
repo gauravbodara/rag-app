@@ -16,7 +16,7 @@ export const Thread = () => {
     setAnswer(null);
     setReferences(null);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/query`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_RAG_BE_URL}/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input }),

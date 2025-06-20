@@ -5,11 +5,11 @@ import { QdrantVectorStore } from "@langchain/qdrant";
 // Init embeddings
 const embeddings = new OllamaEmbeddings({
   model: "nomic-embed-text:v1.5", // Default value
-  baseUrl: process.env.OLLAMA_URL, // Default value
+  baseUrl: process.env.OLLAMA_URL || "http://localhost:11434", // Default value
 });
 
 // Init vector client
-const vectorClient = new QdrantClient({ url: process.env.QDRANT_URL });
+const vectorClient = new QdrantClient({ url: process.env.QDRANT_URL || "http://localhost:6333" });
 
 // Init vector store from existing collection if it exists
 let vectorStore = null;

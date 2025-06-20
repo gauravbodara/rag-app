@@ -45,8 +45,7 @@ services:
     networks:
       - rag-net
 
-  
-rag-fe:Add commentMore actions
+  rag-fe:
     build:
       context: ./rag-fe
       dockerfile: Dockerfile

@@ -1,7 +1,14 @@
 const express = require("express");
 const { handleQuery } = require("../controller/query.controller.js");
+const rateLimit = require('express-rate-limit');
 
 const queryRouter = express.Router();
+
+const queryLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: { error: 'Too many requests, please try again later.' }
+});
 
 // create middleware to check for query text validations
 queryRouter.use((req, res, next) => {
@@ -24,6 +31,8 @@ queryRouter.use((req, res, next) => {
   }
   next();
 });
+
+queryRouter.use(queryLimiter);
 queryRouter.post("/", handleQuery);
 
 module.exports = { queryRouter };

@@ -43,11 +43,7 @@ const handleQuery = async (req, res) => {
         .status(200)
         .json({ answer: "No relevant documents found.", references: [] });
     }
-    console.log(
-      "results",
-      results,
-      results.map((item) => item.metadata.pageNumber)
-    );
+    
     const context = results.map((r) => r.pageContent).join("\n---\n");
     const llmSpan = tracer.startSpan("query_llm", { childOf: parentSpan });
     const llmStart = Date.now();

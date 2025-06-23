@@ -15,8 +15,10 @@ const handleQuery = async (req, res) => {
   }
   try {
     logger.info('Processing query');
+    // clean query using langchain
+    
     const cleanSpan = tracer.startSpan('query_clean', { childOf: parentSpan });
-    // Simulate cleaning (if any)
+    logger.info(`Cleaned query: ${cleanQuery}`);
     cleanSpan.finish();
     const embeddingSpan = tracer.startSpan('query_embedding', { childOf: parentSpan });
     const embeddingStart = Date.now();

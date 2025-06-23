@@ -48,42 +48,20 @@ export const Assistant = () => {
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar />
         <SidebarInset>
-          {/* Upload UI at the top */}
-          <div className="flex flex-col gap-2 p-4 border-b bg-background">
-            <div className="flex items-center gap-2">
-              <Input
-                ref={fileInputRef}
-                type="file"
-                accept="application/pdf"
-                onChange={handleFileChange}
-                disabled={uploading}
-                className="max-w-xs"
-              />
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                type="button"
-              >
-                {uploading ? "Uploading..." : "Upload PDF"}
-              </Button>
-            </div>
-            {uploadError && (
-              <div className="text-red-500 text-sm">{uploadError}</div>
-            )}
-            {uploadSuccess && (
-              <div className="text-green-600 text-sm">
-                PDF uploaded and embedded successfully. Chunks: {uploadSuccess.chunks}
-              </div>
-            )}
-          </div>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger />
             <Separator orientation="vertical" className="mr-2 h-4" />
           </header>
-          <Thread />
+          <Thread
+            uploading={uploading}
+            uploadError={uploadError}
+            uploadSuccess={uploadSuccess}
+            fileInputRef={fileInputRef}
+            handleFileChange={handleFileChange}
+          />
         </SidebarInset>
       </SidebarProvider>
     </AssistantRuntimeProvider>

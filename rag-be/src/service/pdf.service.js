@@ -1,7 +1,11 @@
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+const { RecursiveCharacterTextSplitter } = require("@langchain/textsplitters");
+const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.mjs');
+const opentracing = require('opentracing');
 
-export async function parseAndChunkPDF(buffer) {
+async function parseAndChunkPDF(buffer, parentSpan = null) {
+  const tracer = opentracing.globalTracer();
+  const span = tracer.startSpan('pdf_chunking', parentSpan ? { childOf: parentSpan } : {});
+  const chunkingStart = Date.now();
   // Convert Buffer to Uint8Array for pdfjs-dist
   const uint8array = new Uint8Array(buffer);
   const loadingTask = pdfjsLib.getDocument({ data: uint8array });
@@ -18,5 +22,10 @@ export async function parseAndChunkPDF(buffer) {
     chunkOverlap: 200,
   });
   const docs = await textSplitter.createDocuments([text]);
+  const chunkingEnd = Date.now();
+  span.log({ event: 'pdf_chunking_time', value: chunkingEnd - chunkingStart });
+  span.finish();
   return { docs, chunks: docs.map(doc => doc.pageContent) };
 }
+
+module.exports = { parseAndChunkPDF };

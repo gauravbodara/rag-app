@@ -1,7 +1,8 @@
-import { MemoryVectorStore } from 'langchain/vectorstores/memory';
-import { OllamaEmbeddings } from "@langchain/ollama";
-import { QdrantClient } from "@qdrant/js-client-rest";
-import { QdrantVectorStore } from "@langchain/qdrant";
+const { OllamaEmbeddings } = require("@langchain/ollama");
+const { QdrantClient } = require("@qdrant/js-client-rest");
+const { QdrantVectorStore } = require("@langchain/qdrant");
+const opentracing = require('opentracing');
+
 // Init embeddings
 const embeddings = new OllamaEmbeddings({
   model: "nomic-embed-text:v1.5", // Default value
@@ -25,14 +26,23 @@ let vectorStore = null;
 })();
 
 // Create vector store from documents
-export async function createVectorStoreFromDocs(docs) {
+async function createVectorStoreFromDocs(docs, parentSpan = null) {
+  const tracer = opentracing.globalTracer();
+  const span = tracer.startSpan('embedding_storage', parentSpan ? { childOf: parentSpan } : {});
+  const embeddingStart = Date.now();
   vectorStore = await QdrantVectorStore.fromDocuments(docs, embeddings, { 
     client: vectorClient,
     collectionName: "langchain-js-demo",
   });
+  const embeddingEnd = Date.now();
+  span.log({ event: 'embedding_storage_time', value: embeddingEnd - embeddingStart });
+  span.finish();
 }
 
 // Search vector store
-export async function searchVectorStore(query) {
+ async function searchVectorStore(query, parentSpan = null) {
+  // Optionally, tracing can be added here in the future
   return await vectorStore.similaritySearch(query, 4);
 }
+
+module.exports = { createVectorStoreFromDocs, searchVectorStore };

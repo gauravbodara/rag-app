@@ -1,14 +1,18 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import { uploadRouter } from './src/routes/upload.route.js';
-import { queryRouter } from './src/routes/query.route.js';
-import logger from './utils/logger.js';
-
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const { uploadRouter } = require('./src/routes/upload.route.js');
+const { queryRouter } = require('./src/routes/query.route.js');
+const logger = require('./utils/logger.js');
+const initJaegerTracer = require('./utils/jaeger');
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+// Initialize Jaeger tracer
+const tracer = initJaegerTracer('rag-be');
+app.set('tracer', tracer);
 
 app.use(express.json());
 app.use(cors());

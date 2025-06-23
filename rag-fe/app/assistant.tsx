@@ -61,6 +61,7 @@ export const Assistant = () => {
             uploadSuccess={uploadSuccess}
             fileInputRef={fileInputRef}
             handleFileChange={handleFileChange}
+            disabled={uploading}
           />
         </SidebarInset>
       </SidebarProvider>

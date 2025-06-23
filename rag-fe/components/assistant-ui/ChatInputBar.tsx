@@ -63,7 +63,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           <TooltipIconButton tooltip="Voice input" aria-label="Voice input">
             <MicIcon color="black" />
           </TooltipIconButton>
-          <TooltipIconButton tooltip="Send" aria-label="Send" onClick={onSend}>
+          <TooltipIconButton tooltip="Send" aria-label="Send" onClick={onSend} disabled={disabled || uploading}>
             <SendIcon color="black" />
           </TooltipIconButton>
         </div>

@@ -11,12 +11,14 @@ export const Thread = ({
   uploadSuccess,
   fileInputRef,
   handleFileChange,
+  disabled,
 }: {
   uploading: boolean;
   uploadError: string | null;
   uploadSuccess: null | { chunks: number };
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -79,7 +81,7 @@ export const Thread = ({
                 <ul className="list-disc ml-6 text-xs">
                   {msg.references.map((ref, ridx) => (
 
-                    <li key={ridx}>Page No. {ref.pageNumber}: {ref.pageContent?.slice(0, 100)}...</li>
+                    <li key={ridx}>Page No {ref.pageNumber}: {ref.pageContent?.slice(0, 100)}...</li>
                   ))}
                 </ul>
               </div>
@@ -107,7 +109,7 @@ export const Thread = ({
         uploading={uploading}
         fileInputRef={fileInputRef}
         handleFileChange={handleFileChange}
-        disabled={loading}
+        disabled={disabled || loading}
       />
       {/* Upload status/errors below the bar */}
       <div className="fixed bottom-2 left-1/2 z-50 w-full max-w-2xl -translate-x-1/2 px-4 pointer-events-none">

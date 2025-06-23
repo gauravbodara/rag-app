@@ -1,11 +1,14 @@
 const { RecursiveCharacterTextSplitter } = require("@langchain/textsplitters");
 const { Document } = require("@langchain/core/documents");
-const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.mjs');
-const opentracing = require('opentracing');
+const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.mjs");
+const opentracing = require("opentracing");
 
 async function parseAndChunkPDF(buffer, parentSpan = null) {
   const tracer = opentracing.globalTracer();
-  const span = tracer.startSpan('pdf_chunking', parentSpan ? { childOf: parentSpan } : {});
+  const span = tracer.startSpan(
+    "pdf_chunking",
+    parentSpan ? { childOf: parentSpan } : {}
+  );
   const chunkingStart = Date.now();
   // Convert Buffer to Uint8Array for pdfjs-dist
   const uint8array = new Uint8Array(buffer);
@@ -16,13 +19,14 @@ async function parseAndChunkPDF(buffer, parentSpan = null) {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const pageText = content.items.map(item => item.str).join(' ');
+    const pageText = content.items.map((item) => item.str).join(" ");
     pageTexts.push({ text: pageText, pageNumber: i });
   }
 
   // Create Document objects with page number metadata
-  let docsWithMetadata = pageTexts.map(({ text, pageNumber }) =>
-    new Document({ pageContent: text, metadata: { pageNumber } })
+  let docsWithMetadata = pageTexts.map(
+    ({ text, pageNumber }) =>
+      new Document({ pageContent: text, metadata: { pageNumber } })
   );
 
   const textSplitter = new RecursiveCharacterTextSplitter({
@@ -36,9 +40,9 @@ async function parseAndChunkPDF(buffer, parentSpan = null) {
     allChunks.push(...chunks);
   }
   const chunkingEnd = Date.now();
-  span.log({ event: 'pdf_chunking_time', value: chunkingEnd - chunkingStart });
+  span.log({ event: "pdf_chunking_time", value: chunkingEnd - chunkingStart });
   span.finish();
-  return { docs: allChunks, chunks: allChunks.map(doc => doc.pageContent) };
+  return { docs: allChunks, chunks: allChunks.map((doc) => doc.pageContent) };
 }
 
 module.exports = { parseAndChunkPDF };

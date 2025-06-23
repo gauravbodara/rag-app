@@ -78,7 +78,8 @@ export const Thread = ({
                 <div className="font-semibold mb-1 text-xs">References:</div>
                 <ul className="list-disc ml-6 text-xs">
                   {msg.references.map((ref, ridx) => (
-                    <li key={ridx}>{ref.pageContent?.slice(0, 200)}...</li>
+
+                    <li key={ridx}>Page No. {ref.pageNumber}: {ref.pageContent?.slice(0, 100)}...</li>
                   ))}
                 </ul>
               </div>

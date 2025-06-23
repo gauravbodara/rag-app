@@ -18,7 +18,7 @@ const handleQuery = async (req, res) => {
     // clean query using langchain
     
     const cleanSpan = tracer.startSpan('query_clean', { childOf: parentSpan });
-    logger.info(`Cleaned query: ${cleanQuery}`);
+    logger.info(`Cleaned query: ${query}`);
     cleanSpan.finish();
     const embeddingSpan = tracer.startSpan('query_embedding', { childOf: parentSpan });
     const embeddingStart = Date.now();
@@ -33,6 +33,7 @@ const handleQuery = async (req, res) => {
       parentSpan.finish();
       return res.status(200).json({ answer: 'No relevant documents found.', references: [] });
     }
+    console.log("results", results, results.map(item => item.metadata.pageNumber));
     const context = results.map(r => r.pageContent).join('\n---\n');
     const llmSpan = tracer.startSpan('query_llm', { childOf: parentSpan });
     const llmStart = Date.now();
@@ -44,7 +45,7 @@ const handleQuery = async (req, res) => {
     parentSpan.finish();
     logger.info('Query processed successfully');
     // Only return page numbers as references
-    res.json({ answer: answer.content, references: results.map(r => r.metadata?.pageNumber).filter(Boolean) });
+    res.json({ answer: answer.content, references: results.map(r => {return {pageNumber: r.metadata?.pageNumber, pageContent: r.pageContent}}).filter(Boolean) });
   } catch (err) {
     logger.error('Query error:', err);
     parentSpan.setTag('error', true);

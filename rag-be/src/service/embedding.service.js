@@ -20,7 +20,7 @@ let vectorStore = null;
   if (exists) {
     vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
       client: vectorClient,
-      collectionName: "langchain-js-demo",
+      collectionName: "rag-assistant",
     });
   }
 })();
@@ -32,7 +32,7 @@ async function createVectorStoreFromDocs(docs, parentSpan = null) {
   const embeddingStart = Date.now();
   vectorStore = await QdrantVectorStore.fromDocuments(docs, embeddings, { 
     client: vectorClient,
-    collectionName: "langchain-js-demo",
+    collectionName: "rag-assistant",
   });
   const embeddingEnd = Date.now();
   span.log({ event: 'embedding_storage_time', value: embeddingEnd - embeddingStart });

@@ -26,6 +26,7 @@ const handleQuery = async (req, res) => {
     const embeddingStart = Date.now();
     // Embedding is part of vector search
     const results = await searchVectorStore(query, parentSpan);
+    
     const embeddingEnd = Date.now();
     logger.info(
       `Query embedding/vector search time: ${embeddingEnd - embeddingStart}ms`

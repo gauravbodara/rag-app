@@ -9,9 +9,11 @@ const opentracing = require("opentracing");
 const handleUpload = async (req, res) => {
   const tracer = req.app.get("tracer");
   const parentSpan = tracer.startSpan("document_upload_flow");
+
   const filePath = path.join("temp", req.file.filename);
   const uploadStart = Date.now();
   const fileBuffer = fs.readFileSync(filePath);
+
   const uploadEnd = Date.now();
   if (!fileBuffer) {
     logger.warn("No file uploaded");
@@ -21,7 +23,9 @@ const handleUpload = async (req, res) => {
   }
   try {
     logger.info("Processing uploaded PDF");
+
     parentSpan.log({ event: "upload_time", value: uploadEnd - uploadStart });
+    
     const chunkingSpan = tracer.startSpan("chunking", { childOf: parentSpan });
     const chunkingStart = Date.now();
     const { docs, chunks } = await parseAndChunkPDF(fileBuffer, parentSpan);

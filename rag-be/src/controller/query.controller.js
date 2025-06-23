@@ -43,7 +43,8 @@ const handleQuery = async (req, res) => {
     llmSpan.finish();
     parentSpan.finish();
     logger.info('Query processed successfully');
-    res.json({ answer: answer.content, references: results });
+    // Only return page numbers as references
+    res.json({ answer: answer.content, references: results.map(r => r.metadata?.pageNumber).filter(Boolean) });
   } catch (err) {
     logger.error('Query error:', err);
     parentSpan.setTag('error', true);

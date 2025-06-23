@@ -15,7 +15,7 @@ export const Thread = ({
   uploading: boolean;
   uploadError: string | null;
   uploadSuccess: null | { chunks: number };
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   const [input, setInput] = useState("");

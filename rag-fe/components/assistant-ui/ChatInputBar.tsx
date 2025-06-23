@@ -8,7 +8,7 @@ export interface ChatInputBarProps {
   onSend: () => void;
   onUpload: () => void;
   uploading: boolean;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
 }
